@@ -16,6 +16,7 @@
 		"plugin": true
 	},
 	"scripts": {
+	  "dev": "npx serve .",
 		"lint": "eslint --ext .js ./tyrano",
 		"format": "prettier --write ./tyrano/**/*.js"
 	},

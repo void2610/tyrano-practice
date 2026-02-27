@@ -44,9 +44,12 @@
 #
 さて、ゲームが簡単に作れるというから、来てみたものの[p]
 
+@jump storage="scene2.ks"
+
 誰もいねぇじゃねぇか。[p]
 ……[p]
-帰るか。。。[p]
+帰るか。。。[l][r]
+いや、もう少しだけ待ってみよう[p]
 
 [font  size="30"   ]
 #?
@@ -57,11 +60,14 @@
 誰だ！？[p]
 
 ;キャラクター登場
-[chara_show  name="akane"  ]
-#?
-こんにちは。[p]
+[chara_show  name="akane"]
+[chara_mod name="akane" face="angry"]
+#akane
+ちょっと！無視しないでよ！[p]
+[chara_mod name="akane" face="default"]
+あ、ごめんね。改めましてこんにちは。[p]
 私の名前はあかね。[p]
-#あかね
+#akane
 もしかして、ノベルゲームの開発に興味があるの？[p]
 
 [glink  color="blue"  storage="scene1.ks"  size="28"  x="360"  width="500"  y="150"  text="はい。興味あります"  target="*selectinterest"  ]
