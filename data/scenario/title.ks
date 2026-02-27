@@ -12,12 +12,23 @@
 [button x=135 y=410 graphic="title/button_cg.png" enterimg="title/button_cg2.png" storage="cg.ks" keyfocus="3"]
 [button x=135 y=500 graphic="title/button_replay.png" enterimg="title/button_replay2.png" storage="replay.ks" keyfocus="4"]
 [button x=135 y=590 graphic="title/button_config.png" enterimg="title/button_config2.png" role="sleepgame" storage="config.ks" keyfocus="5"]
+[glink text="【デモシーン】" target="*demostart" keyfocus="6"]
 
 [s]
 
 *gamestart
-;一番最初のシナリオファイルへジャンプする
-@jump storage="scene1.ks"
+[eval exp="tf.next_scene='scene1.ks'"]
+@jump target="*game_init"
 
+*demostart
+[eval exp="tf.next_scene='scene2.ks'"]
+@jump target="*game_init"
 
-
+;ゲーム開始時の共通初期化処理
+*game_init
+[cm]
+[clearfix]
+[start_keyconfig]
+@showmenubutton
+@layopt layer=message0 visible=true
+@jump storage="&tf.next_scene"
