@@ -79,6 +79,5 @@ tyrano-practice/
 - `.ks` ファイルのコメントは `;`（セミコロン）で開始する
 
 ## 動作確認
-- `index.html` をブラウザで開くことでゲームを実行できる
-- ローカルファイルアクセスの制限がある場合はローカルHTTPサーバーを使用する
-  - 例: `python3 -m http.server 8000` → `http://localhost:8000`
+- ローカルHTTPサーバーを使用してゲームを実行する
+  - `npx serve .` → `http://localhost:3000`
