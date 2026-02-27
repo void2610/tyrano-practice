@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+package-lock.json
+
+# ティラノスクリプト
+release/
+test/
+studio_config.json
+
+# ビルド出力
+build/
+dist/
+
+# バックアップ
+*.bak
+*.tmp
+*~
