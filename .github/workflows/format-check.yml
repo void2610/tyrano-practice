@@ -1,0 +1,55 @@
+name: Format Check
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'data/**/*.ks'
+      - '.prettierrc.js'
+      - '.prettierignore'
+      - '.eslintrc.js'
+      - '.github/workflows/format-check.yml'
+  pull_request:
+    paths:
+      - 'data/**/*.ks'
+      - '.prettierrc.js'
+      - '.prettierignore'
+      - '.eslintrc.js'
+      - '.github/workflows/format-check.yml'
+
+jobs:
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prettier check
+        id: prettier
+        continue-on-error: true
+        run: npx prettier --check "data/**/*.ks" "*.js" "*.json"
+
+      - name: Run ESLint check
+        id: eslint
+        continue-on-error: true
+        run: npx eslint "*.js"
+
+      - name: Report results
+        if: steps.prettier.outcome == 'failure' || steps.eslint.outcome == 'failure'
+        run: |
+          echo "::error::Format check failed:"
+          [ "${{ steps.prettier.outcome }}" = "failure" ] && echo "  - Prettier formatting violations found"
+          [ "${{ steps.eslint.outcome }}" = "failure" ] && echo "  - ESLint violations found"
+          exit 1

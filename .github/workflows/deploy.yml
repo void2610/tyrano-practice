@@ -1,0 +1,123 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create build artifact
+        run: |
+          mkdir -p build
+          # プロジェクト全体をビルドディレクトリにコピー（node_modules等は除外）
+          rsync -av --exclude='node_modules' --exclude='.git' --exclude='build' --exclude='.github' . build/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tyrano-game-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'main' }}
+          path: build/
+          retention-days: 7
+
+  deploy-preview:
+    name: Deploy Preview
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 1
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tyrano-game-pr-${{ github.event.pull_request.number }}
+          path: downloaded/
+
+      - name: Deploy to gh-pages
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # PR番号のディレクトリを作成してデプロイ
+          rm -rf "$PR_NUMBER"
+          mkdir -p "$PR_NUMBER"
+          cp -r downloaded/* "$PR_NUMBER/"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$PR_NUMBER"
+          git commit -m "deploy: PR #${PR_NUMBER} のプレビューをデプロイ" || echo "変更なし"
+          git push origin gh-pages
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.issue.number;
+            const previewUrl = `https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${prNumber}/`;
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🎮 プレビューデプロイ完了\n\nプレビューURL: ${previewUrl}`
+            });
+
+  deploy-production:
+    name: Deploy Production
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 1
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tyrano-game-main
+          path: downloaded/
+
+      - name: Deploy to gh-pages root
+        run: |
+          # ルートディレクトリにデプロイ（PRディレクトリは保持）
+          find . -maxdepth 1 -type f -delete
+          find . -maxdepth 1 -type d ! -name '.' ! -name '.git' ! -name '[0-9]*' -exec rm -rf {} +
+          cp -r downloaded/* .
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "deploy: 本番環境にデプロイ (commit: ${{ github.sha }})" || echo "変更なし"
+          git push origin gh-pages
