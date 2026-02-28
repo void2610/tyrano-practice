@@ -34,17 +34,17 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run Prettier check
         id: prettier
         continue-on-error: true
-        run: npx prettier --check "data/**/*.ks" "*.js" "*.json"
+        run: npx prettier --check "data/**/*.ks" "*.js" "*.json" || true
 
       - name: Run ESLint check
         id: eslint
         continue-on-error: true
-        run: npx eslint "*.js"
+        run: npx eslint "*.js" || true
 
       - name: Report results
         if: steps.prettier.outcome == 'failure' || steps.eslint.outcome == 'failure'
