@@ -16,7 +16,7 @@
 
 ;	カメラのリセット
 	[reset_camera time="100" wait="true"]
-	
+
 ;	前景レイヤの中身をすべて空に
 	[iscript]
 	$(".layer_camera").empty();
@@ -32,10 +32,10 @@
 
 	tf.current_bgm_vol = parseInt(TG.config.defaultBgmVolume); // BGM音量
 	tf.current_se_vol = parseInt(TG.config.defaultSeVolume); // SE音量
-	
+
 	tf.current_ch_speed = parseInt(TG.config.chSpeed); // テキスト表示速度
 	tf.current_auto_speed = parseInt(TG.config.autoSpeed); // オート時のテキスト表示速度
-	
+
 	tf.text_skip ="ON"; // 未読スキップ
 	if(TG.config.unReadTextSkip != "true"){
 		tf.text_skip ="OFF";
@@ -343,6 +343,7 @@
 ; BGM更新
 
 ;--------------------------------------------------------------------------------
+; tyranoscript-disable-next-line tyrano-unused-label
 *icon_bgm
 
 	[iscript]
@@ -370,6 +371,7 @@
 ; SE更新
 
 ;--------------------------------------------------------------------------------
+; tyranoscript-disable-next-line tyrano-unused-label
 *icon_se
 
 	[iscript]
@@ -395,6 +397,7 @@
 ; テキスト速度更新
 
 ;--------------------------------------------------------------------------------
+; tyranoscript-disable-next-line tyrano-unused-label
 *icon_ch
 
 	[iscript]
@@ -419,6 +422,7 @@
 ; オート速度更新
 
 ;--------------------------------------------------------------------------------
+; tyranoscript-disable-next-line tyrano-unused-label
 *icon_auto
 
 	[iscript]
@@ -443,6 +447,7 @@
 ; 画像の読み込み（コンフィグ画面の起動時のみコール）
 
 ;================================================================================
+; tyranoscript-disable-next-line tyrano-unused-label
 *load_img
 
 	[layopt layer="0" visible="true"]

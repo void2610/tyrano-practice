@@ -13,6 +13,7 @@
 [button x=135 y=500 graphic="title/button_replay.png" enterimg="title/button_replay2.png" storage="replay.ks" keyfocus="4"]
 [button x=135 y=590 graphic="title/button_config.png" enterimg="title/button_config2.png" role="sleepgame" storage="config.ks" keyfocus="5"]
 [glink text="【デモシーン】" target="*demostart" keyfocus="6"]
+[glink text="【ルビテスト】" target="*rubytest" keyfocus="7"]
 
 [s]
 
@@ -22,6 +23,10 @@
 
 *demostart
 [eval exp="tf.next_scene='scene2.ks'"]
+@jump target="*game_init"
+
+*rubytest
+[eval exp="tf.next_scene='ruby_test.ks'"]
 @jump target="*game_init"
 
 ;ゲーム開始時の共通初期化処理

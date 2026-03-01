@@ -2,11 +2,14 @@
 
 *start
 
-[bg storage="room.jpg" time="100"]
+[bg storage="rouka.jpg" time="100"]
+
+@playbgm storage="music.ogg" volume=50 loop=true
 
 #
 さて、ゲームが簡単に作れるというから、来てみたものの[p]
 
+@fadeoutbgm time=1000
 @jump storage="scene2.ks"
 
 誰もいねぇじゃねぇか。[p]
@@ -18,6 +21,14 @@
 #?
 ちょっとまったーーーーー[p]
 [resetfont  ]
+
+; マクロ定義のテストだよ
+; aaaaaaaaaaaaaaaaaaa
+[macro name="mymacro"]
+[font color="red"]
+[endmacro]
+
+@mymacro
 
 #
 誰だ！？[p]
