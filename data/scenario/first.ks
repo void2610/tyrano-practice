@@ -11,6 +11,10 @@
 
 ;ゲームで必ず必要な初期化処理はこのファイルに記述するのがオススメ
 
+; 自動ルビプラグイン
+[plugin name=auto_ruby_full]
+[call storage="ruby_dict.ks"]
+
 ;メッセージウィンドウの設定（非表示のまま初期化）
 [position layer="message0" left=160 top=500 width=1000 height=200 page=fore visible=true]
 [position layer=message0 page=fore margint="45" marginl="50" marginr="70" marginb="60"]

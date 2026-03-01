@@ -1,0 +1,13 @@
+/* ルビ全体の配置 */
+ruby {
+  ruby-align: center;
+  display: inline;
+}
+
+/* ルビテキスト（読み仮名） */
+rt {
+  font-size: 0.5em;
+  color: inherit;
+  opacity: 0.85;
+  letter-spacing: 0.05em;
+}
