@@ -8,7 +8,7 @@
 [arb_auto ruby="蒼汰" text="そうた"]
 
 ; 世界観・固有名詞
-[arb_auto ruby="魔法" text="まほう"]
+[arb_auto ruby="魔法" text="まほう" once="true"]
 [arb_auto ruby="召喚陣" text="しょうかんじん"]
 [arb_auto ruby="召喚" text="しょうかん"]
 [arb_auto ruby="世界" text="せかい"]

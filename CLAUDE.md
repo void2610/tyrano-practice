@@ -99,3 +99,8 @@ tyrano-practice/
 ## 動作確認
 - ローカルHTTPサーバーを使用してゲームを実行する
   - `npx serve .` → `http://localhost:3000`
+
+## シナリオライター向けワークフロー
+- 記法ガイド: `docs/WRITER_GUIDE.md`
+- `/import-scenario <path>` でテキスト原稿を `.ks` ファイルに変換できる
+- キャラクター名対応表: `.claude/skills/import-scenario/chara_map.md`
