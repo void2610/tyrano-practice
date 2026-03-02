@@ -8,11 +8,17 @@
   // 個別ルビ: { 単語: ["よ", "み1", "よ", "み2"] }
   const rubyDict = {};
 
+  // 初回のみフラグ: once=true で登録された単語のセット
+  const onceWords = new Set();
+  // 初回適用済みセット
+  const onceDone = new Set();
+
   // 辞書登録タグ
   // 一括ルビ: [arb_auto ruby="単語" text="よみ"]
   // 個別ルビ: [arb_auto ruby="自動人形" split="オ|ート|マ|タ"]
   //   split は "|" 区切りで各文字に対応するルビを指定する
   //   文字数と split の区切り数が一致しなければならない
+  // 初回のみ: [arb_auto ruby="単語" text="よみ" once="true"]
   // master_tag は init() 時にコピー済みなので直接登録する
   TYRANO.kag.ftag.master_tag.arb_auto = {
     vital: ["ruby"],
@@ -25,6 +31,10 @@
       } else {
         // 一括ルビモード: 文字列として登録
         rubyDict[pm.ruby] = pm.text;
+      }
+      // 初回のみモード
+      if (pm.once === "true") {
+        onceWords.add(pm.ruby);
       }
       TYRANO.kag.ftag.nextOrder();
     },
@@ -74,6 +84,9 @@
     // 長い単語を優先してマッチさせるためにソート
     const words = Object.keys(rubyDict).sort((a, b) => b.length - a.length);
     for (const word of words) {
+      // 初回のみかつ適用済みの場合はスキップ
+      if (onceWords.has(word) && onceDone.has(word)) continue;
+
       const reading = rubyDict[word];
       const escaped = escapeRegex(word);
       // すでに <ruby>〜</ruby> で囲まれている箇所は二重置換しない
@@ -91,13 +104,19 @@
         const replacement = chars
           .map((ch, i) => `<ruby>${ch}<rt>${reading[i]}</rt></ruby>`)
           .join("");
+        const before = text;
         text = text.replace(regex, replacement);
+        // 初回のみ: マッチして置換が起きた場合に適用済み記録
+        if (onceWords.has(word) && text !== before) onceDone.add(word);
       } else {
         // 一括ルビ: 単語全体に一つのルビを付ける
+        const before = text;
         text = text.replace(
           regex,
           `<ruby>${word}<rt>${reading}</rt></ruby>`
         );
+        // 初回のみ: マッチして置換が起きた場合に適用済み記録
+        if (onceWords.has(word) && text !== before) onceDone.add(word);
       }
     }
     return text;
