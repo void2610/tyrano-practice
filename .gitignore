@@ -15,6 +15,9 @@ release/
 test/
 studio_config.json
 
+# ティラノスクリプトエンジン（再配布禁止）
+tyrano/
+
 # ビルド出力
 build/
 dist/
